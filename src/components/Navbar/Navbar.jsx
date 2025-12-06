@@ -6,7 +6,7 @@ import "./Navbar.css";
 
 function Navbar() {
   const [currentUser, setCurrentUser] = useState(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("currentUser"));
