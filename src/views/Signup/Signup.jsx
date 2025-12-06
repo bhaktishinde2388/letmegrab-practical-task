@@ -12,7 +12,14 @@ function Signup() {
     confirmPassword: "",
   });
 
-  const signupUser = () => {
+  const signupUser = (e) => {
+     e.preventDefault(); 
+
+    //vaidations
+     if (!user.name || !user.password || !user.confirmPassword) {
+      setError("All fields are required!");
+      return;
+    }
 
     localStorage.setItem("signupUser", JSON.stringify(user));
     console.log("User data stored in localStorage:", user);
