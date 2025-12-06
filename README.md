@@ -1,16 +1,47 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Author:** Bhakti Dattatray Shinde  
+**Email:** bhaktishinde2388@gmail.com | **Phone:** 7709722873
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Project Overview
+ 
+The app implements user signup/login (stored in `localStorage`), a protected Products page and CRUD operations for products (using the provided FakeStore API), plus search, filter and responsive UI.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✅ Features Implemented
 
-## Expanding the ESLint configuration
+- Landing page with responsive **Navbar** (Logo, Login, Signup).
+- Image carousel on landing page.
+- **Signup** with validation (username, email, password, confirm password). Data stored in `localStorage`.
+- **Login** (only a user who signed up can login).
+- After login: Navbar shows **user name** and **Logout**.
+- Protected **Products** page (accessible only when logged in).
+- **Products** table with:
+  - Title, Price, Description, Category
+  - Actions: **View** (modal), **Edit** (modal with pre-filled form), **Delete** (confirmation)
+- **Add Product** form (adds via API and updates UI).
+- **Search** bar (live filtering by title).
+- **Category filter** dropdown.
+- Toast notifications for Add / Update / Delete (React-Toastify).
+- Responsive layout — table converts to card-style on small screens.
+- Reusable components: `Button`, `Modal`, `Navbar`.
+- Custom hook `useConfirmDelete` for delete confirmation messages (shows website name).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🧰 Tech Stack
+
+- React (Functional components + Hooks)
+- React Router
+- Axios
+- React Toastify
+- CSS + responsive styles
+- FakeStore API (`https://fakestoreapi.com/`) for product CRUD requests
+- LocalStorage for auth data
+
+---
+
+
+
