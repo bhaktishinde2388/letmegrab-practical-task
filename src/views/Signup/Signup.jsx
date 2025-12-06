@@ -21,7 +21,12 @@ function Signup() {
       return;
     }
 
-    localStorage.setItem("signupUser", JSON.stringify(user));
+    //this is for adding multip signups in the localstorage
+   let existingUsers = JSON.parse(localStorage.getItem("signupUsers")) || [];
+   existingUsers.push(user);
+   localStorage.setItem("signupUsers", JSON.stringify(existingUsers));
+   
+
     console.log("User data stored in localStorage:", user);
   };
 
