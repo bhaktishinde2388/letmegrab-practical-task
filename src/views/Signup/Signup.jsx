@@ -35,6 +35,11 @@ function Signup() {
       return;
     }
 
+     if (user.password !== user.confirmPassword) {
+      setError("Passwords is not match.");
+      return;
+    }
+
     //this is for adding multip signups in the localstorage
    let existingUsers = JSON.parse(localStorage.getItem("signupUsers")) || [];
    existingUsers.push(user);
