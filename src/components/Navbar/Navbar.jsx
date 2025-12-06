@@ -28,7 +28,7 @@ function Navbar() {
       <div className="btn-container">
         {currentUser ? (
           <div>
-            <span style={{ marginRight: "10px" }}>Hello, {currentUser.name}</span>
+            <span style={{ marginRight: "10px",fontSize:"20px",fontWeight:"bolder", color:"red" }}>{currentUser.name}👤</span>
             <Button text="Logout" onClick={logout} />
           </div>
         ) : (
