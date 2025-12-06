@@ -5,6 +5,7 @@ import axios from 'axios';
 function Products() {
     const [products, setProducts] = useState([]);
     const [searchText, setSearchText] = useState("");
+    const [filterDropdown, setFilterDropdown] = useState("");
 
 useEffect(() => {
   axios
@@ -13,12 +14,16 @@ useEffect(() => {
       .catch((err) => console.error("Error fetching products:", err));
 }, []);
 
+//for unique category of product
+ const categories = [...new Set(products.map((p) => p.category))];
 
 //filter is added............
   const filteredProducts = products.filter((p) =>
     p.title.toLowerCase().includes(searchText.toLowerCase())
-  );
-
+  )
+     .filter((p) =>
+      filterDropdown === "" ? true : p.category === filterDropdown
+    );
 
   return (
 <div>
@@ -30,7 +35,18 @@ useEffect(() => {
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
-
+   {/* dropdown... */}
+      <select
+        value={filterDropdown}
+        onChange={(e) => setFilterDropdown(e.target.value)}
+      >
+        <option value="">Filter By Category</option>
+        {categories.map((c, i) => (
+          <option key={i} value={c}>
+            {c}
+          </option>
+        ))}
+      </select>
       <table border="1">
         <thead>
           <tr>
