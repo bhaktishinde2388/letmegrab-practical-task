@@ -1,6 +1,6 @@
 .btn {
     padding: 8px 16px;
-    margin: 0px 10px;
+    margin: 5px 10px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -8,4 +8,6 @@
 
     border: 1px solid #FFFFF0;
     background-color: #3b3232;
+     width: 120px;      
+    text-align: center
 }
