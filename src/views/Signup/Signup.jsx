@@ -8,6 +8,7 @@ function Signup() {
 
   const [user, setUser] = useState({
     name: "",
+    email:"",
     password: "",
     confirmPassword: "",           
   });
@@ -37,6 +38,12 @@ function Signup() {
       return;
     }
 
+     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(user.email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
      if (user.password !== user.confirmPassword) {
       setError("Passwords is not match.");
       return;
@@ -60,9 +67,14 @@ localStorage.setItem("signupUsers", JSON.stringify(existingUsers));
           value={user.name}
           onChange={(e) => setUser({ ...user, name: e.target.value })} />
 
+          <input className='password-input input-box' type="text" placeholder='Enter Email'
+          value={user.email}
+          onChange={(e) => setUser({ ...user, email: e.target.value })} />
+
         <input className='password-input input-box' type="text" placeholder='Enter Password'
           value={user.password}
           onChange={(e) => setUser({ ...user, password: e.target.value })} />
+
 
         <input className='confirm-pasword-input input-box' type="text" placeholder='Confirm Password'
           value={user.confirmPassword}
