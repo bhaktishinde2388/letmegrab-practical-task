@@ -16,12 +16,33 @@ input {
   outline: none;
   font-size: 13px;
   transition: 0.2s ease;
-  background-color: rgb(245, 233, 233);
+  background-color:  #f7f7f7;
 }
 .searchbar
 {
      width: 250px;
-background-color: rgb(229, 201, 201);
+ background-color:  #f7f7f7;
 color:black;
 border: 1px solid rgb(61, 50, 43);
+}
+
+
+table {
+ 
+  margin: 20px auto;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  color: 20px;
+}
+
+th{
+    font-size: 16px;
+    background-color: rgb(236, 203, 120);
+    color: white;
+    padding: 10px;
+}
+
+td{
+     font-size: 14px;
+     padding: 10px;
 }
