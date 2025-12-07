@@ -26,7 +26,7 @@ function Signup() {
     // Regex validation
     const usernameRegex = /^[a-zA-Z0-9_]{3,16}$/;
     if (!usernameRegex.test(user.name)) {
-      setError("Username should be 3-16 characters, letters/numbers only.");
+      setError("Username must be 3–16 characters and contain only letters, numbers, or underscore (no spaces).");
       return;
     }
 
