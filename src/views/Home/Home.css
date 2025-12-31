@@ -77,7 +77,7 @@ body {
 .message-card h3 {
   font-size: 1.5rem;
   margin-bottom: 15px;
-  color: #f07da4; /* dark-blue title */
+  color: #f07da4; /* Title color */
 }
 
 .message-card p {
@@ -86,7 +86,6 @@ body {
   line-height: 1.6;
 }
 
-/* Hover Effect */
 .message-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
@@ -238,10 +237,83 @@ body {
   background: #f7c6d9;
 }
 
-/* Responsive */
+/* Responsive Styles */
+
+/* Tablets */
+@media screen and (max-width: 1024px) {
+  .carousel-container img {
+    height: 350px;
+  }
+  .section-card h2 {
+    font-size: 2.2rem;
+  }
+  .section-card p {
+    font-size: 1.1rem;
+  }
+  .cards-section h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Responsive Styles */
+
+/* Tablets */
+@media screen and (max-width: 1024px) {
+  .carousel-container img {
+    height: 350px;
+  }
+  .section-card h2 {
+    font-size: 2.2rem;
+  }
+  .section-card p {
+    font-size: 1.1rem;
+  }
+  .cards-section h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Mobile */
 @media screen and (max-width: 768px) {
+  .carousel-container img {
+    height: 250px;
+  }
   .cards-container {
     flex-direction: column;
     align-items: center;
+    gap: 25px; /* Slightly more spacing for vertical stacking */
+  }
+  
+  /* Message Cards */
+  .message-card {
+    max-width: 95%;
+    flex: 1 1 auto;
+    padding: 25px 20px;
+  }
+
+  /* Product Cards - make larger on mobile */
+  .product-card {
+    max-width: 95%;
+    flex: 1 1 auto;
+    padding: 25px 20px;
+    height: auto; /* Let height adjust automatically for content */
+  }
+  
+  .product-card img {
+    height: 250px; /* bigger image on mobile */
+  }
+  
+  .section-card {
+    padding: 40px 20px;
+  }
+  .section-card h2 {
+    font-size: 2rem;
+  }
+  .section-card p {
+    font-size: 1rem;
+  }
+  .section-card button {
+    padding: 12px 25px;
+    font-size: 0.95rem;
   }
 }
