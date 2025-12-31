@@ -106,3 +106,18 @@
     margin: 5px 0;
   }
 }
+
+
+
+
+.site-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #4b2e2e; /* coffee brown */
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.site-name:hover {
+  color: #7b4a2f;
+}
