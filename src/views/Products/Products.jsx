@@ -5,41 +5,39 @@ import Modal from '../../components/Modal/Modal';
 import Navbar from '../../components/Navbar/Navbar';
 import useConfirmDelete from '../../hooks/useConfirmDelete';
 import Footer from '../../components/Footer/Footer';
-import "./Products.css"
+import "./Products.css";
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [filterDropdown, setFilterDropdown] = useState("");
-
   const [editProduct, setEditProduct] = useState(null);
   const [viewProduct, setViewProduct] = useState(null);
 
-
   const confirmDelete = useConfirmDelete("CoffeeWorld");
-  // Load Products
+
+  // 🔐 Current user
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const isSeller = currentUser?.role === "seller"; // Only seller sees CRUD
+  const isCustomer = currentUser?.role === "user"; // Customer sees only View
+
+  // Load products from API
   useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.error("Error:", err));
+    axios.get("https://fakestoreapi.com/products")
+      .then(res => setProducts(res.data))
+      .catch(err => console.error("Error:", err));
   }, []);
 
-  const categories = [...new Set(products.map((p) => p.category))];
+  const categories = [...new Set(products.map(p => p.category))];
 
   const filteredProducts = products
-    .filter((p) =>
-      p.title.toLowerCase().includes(searchText.toLowerCase())
-    )
-    .filter((p) =>
-      filterDropdown === "" ? true : p.category === filterDropdown
-    );
+    .filter(p => p.title.toLowerCase().includes(searchText.toLowerCase()))
+    .filter(p => filterDropdown === "" ? true : p.category === filterDropdown);
 
-  // Add Product
+  // ➕ Add Product (Seller only)
   const addProduct = (e) => {
     e.preventDefault();
     const form = e.target;
-
     const newProduct = {
       title: form.title.value,
       price: Number(form.price.value),
@@ -47,21 +45,17 @@ function Products() {
       category: form.category.value,
       image: "https://i.pravatar.cc/300",
     };
-
-    axios
-      .post("https://fakestoreapi.com/products", newProduct)
-      .then((res) => {
-        setProducts([...products, res.data]);
-        form.reset();
-        alert("Product Added");
-      });
+    axios.post("https://fakestoreapi.com/products", newProduct).then(res => {
+      setProducts([...products, res.data]);
+      form.reset();
+      alert("Product Added");
+    });
   };
 
-  // Update
+  // ✏️ Update Product (Seller only)
   const handleUpdate = (e) => {
     e.preventDefault();
     const form = e.target;
-
     const updatedProduct = {
       title: form.title.value,
       price: Number(form.price.value),
@@ -69,79 +63,60 @@ function Products() {
       category: form.category.value,
       image: "https://i.pravatar.cc/300",
     };
-
-    axios
-      .put(`https://fakestoreapi.com/products/${editProduct.id}`, updatedProduct)
-      .then((res) => {
-        setProducts(products.map((p) => (p.id === editProduct.id ? res.data : p)));
+    axios.put(`https://fakestoreapi.com/products/${editProduct.id}`, updatedProduct)
+      .then(res => {
+        setProducts(products.map(p => p.id === editProduct.id ? res.data : p));
         setEditProduct(null);
-        alert("Updated");
+        alert("Product Updated");
       });
   };
-  //delete...
+
+  // ❌ Delete Product (Seller only)
   const handleDelete = (id, title) => {
     if (confirmDelete(title)) {
       axios.delete(`https://fakestoreapi.com/products/${id}`).then(() => {
-        setProducts(products.filter((p) => p.id !== id));
-        alert("Deleted");
+        setProducts(products.filter(p => p.id !== id));
+        alert("Product Deleted");
       });
     }
   };
 
-
-  
   return (
     <div>
-
       <Navbar />
-      {/* Search */}
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "15px",
-        margin: "20px 0"
-      }}>
+
+      {/* Search + Filter */}
+      <div style={{ display: "flex", justifyContent: "center", gap: "15px", margin: "20px 0" }}>
         <input
           type="text"
-          className='inputBox  searchbar'
+          className='inputBox searchbar'
           placeholder="Search Product..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-
-        {/* Filter */}
-        <select className='inputBox searchbar'
+        <select
+          className='inputBox searchbar'
           value={filterDropdown}
           onChange={(e) => setFilterDropdown(e.target.value)}
         >
           <option value="">Filter by Category</option>
-          {categories.map((c, i) => (
-            <option key={i} value={c}>
-              {c}
-            </option>
-          ))}
+          {categories.map((c, i) => <option key={i} value={c}>{c}</option>)}
         </select>
       </div>
-      {/* Add Product */}
-      <form onSubmit={addProduct} style={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "12px",
-        margin: "20px 0",
-        width: "100%"
-      }}>
-        <input className='inputBox' type="text" name="title" placeholder="Title" required />
-        <input className='inputBox' type="number" name="price" placeholder="Price" required />
-        <input className='inputBox' type="text" name="description" placeholder="Description" required />
-        <input className='inputBox' type="text" name="category" placeholder="Category" required />
-        <Button className='inputBox' type="submit" text="Add Product" />
-      </form>
+
+      {/* Add Product Form (Seller only) */}
+      {isSeller && (
+        <form onSubmit={addProduct} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px", margin: "20px 0" }}>
+          <input className='inputBox' name="title" placeholder="Title" required />
+          <input className='inputBox' name="price" type="number" placeholder="Price" required />
+          <input className='inputBox' name="description" placeholder="Description" required />
+          <input className='inputBox' name="category" placeholder="Category" required />
+          <Button type="submit" text="Add Product" />
+        </form>
+      )}
 
       {/* Products Table */}
-      <table border="1" style={{ margin: "20px" }}>
+      <table border="1" style={{ margin: "20px", width: "90%", marginLeft: "auto", marginRight: "auto" }}>
         <thead>
           <tr>
             <th>Title</th>
@@ -151,26 +126,31 @@ function Products() {
             <th>Action</th>
           </tr>
         </thead>
-
         <tbody>
-          {filteredProducts.map((p) => (
+          {filteredProducts.map(p => (
             <tr key={p.id}>
               <td>{p.title}</td>
               <td>{p.price}</td>
               <td>{p.description}</td>
               <td>{p.category}</td>
-
               <td>
-                <Button onClick={() => setViewProduct(p)} text="View" />
-                <Button onClick={() => setEditProduct(p)} text="Edit" />
-                <Button onClick={() => handleDelete(p.id, p.title)} text="Delete" />
+                {/* Everyone can view */}
+                <Button text="View" onClick={() => setViewProduct(p)} />
+
+                {/* Only seller can edit/delete */}
+                {isSeller && (
+                  <>
+                    <Button text="Edit" onClick={() => setEditProduct(p)} />
+                    <Button text="Delete" onClick={() => handleDelete(p.id, p.title)} />
+                  </>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* view........... */}
+      {/* View Modal */}
       {viewProduct && (
         <Modal onClose={() => setViewProduct(null)}>
           <h3>Product Details</h3>
@@ -183,23 +163,22 @@ function Products() {
         </Modal>
       )}
 
-      {/* edit........... */}
-      {editProduct && (
+      {/* Edit Modal (Seller only) */}
+      {isSeller && editProduct && (
         <Modal onClose={() => setEditProduct(null)}>
           <h3>Edit Product</h3>
-
           <form onSubmit={handleUpdate}>
-            <input type="text" name="title" className='input-box' defaultValue={editProduct.title} required />
-            <input type="number" name="price" className='input-box' defaultValue={editProduct.price} required />
-            <input type="text" name="description" className='input-box' defaultValue={editProduct.description} required />
-            <input type="text" name="category" className='input-box' defaultValue={editProduct.category} required />
-
+            <input name="title" defaultValue={editProduct.title} required />
+            <input name="price" type="number" defaultValue={editProduct.price} required />
+            <input name="description" defaultValue={editProduct.description} required />
+            <input name="category" defaultValue={editProduct.category} required />
             <Button type="submit" text="Update" />
-            <Button type="button" text="Cancel" onClick={() => setEditProduct(null)} />
+            <Button text="Cancel" onClick={() => setEditProduct(null)} />
           </form>
         </Modal>
       )}
-      <Footer/>
+
+      <Footer />
     </div>
   );
 }

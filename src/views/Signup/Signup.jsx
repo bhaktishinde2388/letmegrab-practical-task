@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import Button from "../../components/Button/Button.jsx";
 import { Link, useNavigate } from 'react-router-dom';
 import './Signup.css';
@@ -10,51 +10,58 @@ function Signup() {
     password: "",
     confirmPassword: "",
   });
-
   const [error, setError] = useState("");
+  const [sellerExists, setSellerExists] = useState(false);
   const navigate = useNavigate();
 
-  const signupUser = (e) => {
+  // Check if seller already exists
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    if (users.some(u => u.role === "seller")) setSellerExists(true);
+  }, []);
+
+  const signupUser = (e, role = "user") => {
     e.preventDefault();
 
-    if (!user.name || !user.password || !user.confirmPassword || !user.email) {
+    if (!user.name || !user.email || !user.password || !user.confirmPassword) {
       setError("All fields are required!");
       return;
     }
 
-    const usernameRegex = /^[a-zA-Z0-9_]{3,16}$/;
-    if (!usernameRegex.test(user.name)) {
-      setError("Username must be 3–16 characters and contain only letters, numbers, or underscore.");
-      return;
-    }
-
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
-    if (!passwordRegex.test(user.password)) {
-      setError("Password must include uppercase, lowercase, number & special symbol.");
+    if (user.password !== user.confirmPassword) {
+      setError("Passwords do not match!");
       return;
     }
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(user.email)) {
-      setError("Please enter a valid email address.");
+      setError("Invalid email address");
       return;
     }
 
-    if (user.password !== user.confirmPassword) {
-      setError("Passwords do not match.");
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // ✅ Check for duplicate username
+    if (users.some(u => u.name === user.name)) {
+      setError("Username already exists! Choose another.");
       return;
     }
 
-    let existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-    if (existingUsers.some((u) => u.email === user.email)) {
-      setError("User already exists! Please login.");
+    // ✅ Check for duplicate email
+    if (users.some(u => u.email === user.email)) {
+      setError("Email already registered! Please login.");
       return;
     }
 
-    existingUsers.push(user);
-    localStorage.setItem("users", JSON.stringify(existingUsers));
+    // Add new user
+    const newUser = { ...user, role };
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    if (role === "seller") setSellerExists(true);
+
     setError("");
-    alert("Signup Successful!");
+    alert(`Signup successful as ${role}!`);
     navigate("/login");
   };
 
@@ -62,6 +69,7 @@ function Signup() {
     <div className='signup-bg'>
       <form className='signup-form'>
         <h2>Create Your Account</h2>
+
         <input
           type="text"
           placeholder='Username'
@@ -86,8 +94,14 @@ function Signup() {
           value={user.confirmPassword}
           onChange={(e) => setUser({ ...user, confirmPassword: e.target.value })}
         />
-        <Button type="submit" text='Signup' onClick={signupUser} />
+
+        <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+          <Button type="button" text="Signup as User" onClick={(e) => signupUser(e, "user")} />
+          <Button type="button" text="Signup as Seller" onClick={(e) => signupUser(e, "seller")} disabled={sellerExists} />
+        </div>
+
         {error && <p className="error-msg">{error}</p>}
+
         <p className="login-text">
           Already have an account? <Link to="/login">Login</Link>
         </p>
