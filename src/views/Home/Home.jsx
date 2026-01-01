@@ -20,8 +20,6 @@ function Home() {
     if (user) setCurrentUser(user);
   }, []);
 
-  const isUser = currentUser?.role === "user";
-
   const carouselImages = [Coffee1, Coffee2, Coffee3];
 
   const messageCards = [
@@ -57,21 +55,24 @@ function Home() {
   const handleViewProduct = (product) => setSelectedProduct(product);
   const closeModal = () => setSelectedProduct(null);
 
+  // ✅ FINAL Add to Cart Logic
   const handleAddToCart = (product) => {
     if (!currentUser) {
       alert("Please login to add products to cart!");
+      navigate("/login");
       return;
     }
 
     if (currentUser.role !== "user") {
-      alert("Seller cannot add to cart!");
+      alert("Only customers can add products to cart!");
       return;
     }
 
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push(product);
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert(`${product.title} added to cart!`);
+
+    alert(`${product.title} added to cart successfully!`);
     closeModal();
   };
 
@@ -80,6 +81,7 @@ function Home() {
       <Navbar />
       <Carousel images={carouselImages} interval={4000} />
 
+      {/* WHY CHOOSE US */}
       <section className="cards-section">
         <h2>Why Choose Us?</h2>
         <div className="cards-container message-cards">
@@ -92,6 +94,7 @@ function Home() {
         </div>
       </section>
 
+      {/* INTRO */}
       <section className="section-card">
         <h2>Welcome to Coffee Lovers</h2>
         <p>
@@ -100,6 +103,7 @@ function Home() {
         <button onClick={handleExplore}>Explore Products</button>
       </section>
 
+      {/* PRODUCTS */}
       <section className="cards-section">
         <h2>Our Coffees</h2>
         <div className="cards-container product-cards">
@@ -114,6 +118,7 @@ function Home() {
         </div>
       </section>
 
+      {/* MODAL */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -124,7 +129,11 @@ function Home() {
 
             <div className="modal-buttons">
               <button onClick={closeModal}>Close</button>
-              {isUser && <button onClick={() => handleAddToCart(selectedProduct)}>Add to Cart</button>}
+
+              {/* ✅ Always visible */}
+              <button onClick={() => handleAddToCart(selectedProduct)}>
+                Add to Cart
+              </button>
             </div>
           </div>
         </div>
